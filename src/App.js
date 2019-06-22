@@ -38,25 +38,37 @@ const FullPage = styled.div`
   }
 `;
 
+const Logo = styled.div`
+  position: absolute;
+  margin: 50px 70px;
+  left: 0;
+  top: 0;
+  ::after {
+    content: "acueducto";
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+`;
+
 const Text = styled.div`
   padding: 80px;
   grid-column: 1 / span 3;
   grid-row: 1 / span 2;
   background-color: #f4f4f4;
-  font-size:2.5rem;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  p{
-    max-width:800px;
-    display:flex;
-    justify-self:center;
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    max-width: 800px;
+    display: flex;
+    justify-self: center;
   }
 `;
 
 const ThreeFull = styled.div`
   grid-column: 4 / span 1;
-  z-index:3;
+  z-index: 3;
   grid-row: 1 / span 2;
   background-color: black;
   position: relative;
@@ -75,7 +87,6 @@ const Block1 = styled.div`
   background-color: #cc2e44;
 `;
 const Block2 = styled.div`
-  padding: 80px;
   grid-column: 3 / span 1;
   grid-row: 3 / span 1;
   background-color: #080b0c;
@@ -87,11 +98,11 @@ const Block3 = styled.div`
   background-color: #341e6f;
 `;
 
-function Plane({ position }) {
+function Plane({ position, color }) {
   return (
     <mesh receiveShadow>
       <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-      <meshPhongMaterial attach="material" color="#222429" />
+      <meshPhongMaterial attach="material" color={color} />
     </mesh>
   );
 }
@@ -108,7 +119,11 @@ function Box({ mouse, x, y, factor }) {
       receiveShadow
     >
       <sphereGeometry attach="geometry" args={[2.25, 20, 20]} />
-      <meshLambertMaterial attach="material" color="#222429" refractionRatio={0.95}/>
+      <meshLambertMaterial
+        attach="material"
+        color="#222429"
+        refractionRatio={0.95}
+      />
     </a.mesh>
   );
 }
@@ -124,27 +139,96 @@ function Scene({ mouse }) {
         penumbra={0.796}
         castShadow
       />
-      <Box mouse={mouse} x={0} y={-5.5} factor={40}/>
-      <Box mouse={mouse} x={0} y={0} factor={40}/>
-      <Box mouse={mouse} x={0} y={5.5} factor={40}/>
-      <Plane position={[0, 0, -10]} />
+      <Box mouse={mouse} x={0} y={-5.5} factor={40} />
+      <Box mouse={mouse} x={0} y={0} factor={40} />
+      <Box mouse={mouse} x={0} y={5.5} factor={40} />
+      <Plane position={[0, 0, -10]} color={"#222429"} />
     </>
   );
 }
 
-function TriangleX({ mouse, x, y, factor }) {
+function Torus({ mouse, x, y, factor }) {
   return (
     <a.mesh
       position={interpolate([mouse], mouse => [
-        (-mouse[0] * factor) / 50000 - x,
-        (mouse[1] * factor) / 50000 - y,
+        (-mouse[0] * factor) / 50000 + x,
+        (mouse[1] * factor) / 50000 + y,
         1
       ])}
       castShadow
       receiveShadow
     >
-      <pyramidGeometry attach="geometry" args={[2.25, 20, 20]} />
-      <meshLambertMaterial attach="material" color="#222429" refractionRatio={0.95}/>
+      <torusGeometry attach="geometry" args={[30, 8, 16, 100]} />
+      <meshLambertMaterial
+        attach="material"
+        color="#fe5430"
+        refractionRatio={0}
+      />
+    </a.mesh>
+  );
+}
+
+function Pyramid({ mouse, x, y, factor }) {
+  var radius = 4;
+  var height = 5;
+  return (
+    <a.mesh
+      position={interpolate([mouse], mouse => [
+        (-mouse[0] * factor) / 50000 + x,
+        (mouse[1] * factor) / 50000 + y,
+        1
+      ])}
+      castShadow
+      receiveShadow
+    >
+      <cylinderGeometry attach="geometry" args={[0, radius, height, 4, 1]} />
+      <meshLambertMaterial
+        attach="material"
+        color="#fe5430"
+        refractionRatio={0}
+      />
+    </a.mesh>
+  );
+}
+
+function Pyramid2({ mouse, x, y, z, factor, rotation }) {
+  var radius = 6.4;
+  var height = 11;
+  var radialSegments = 3;
+  var heightSegments = 0;
+  var openEnded = false;
+  var thetaStart = 0;
+  var thetaLength = 6.3;
+  return (
+    <a.mesh
+      position={interpolate([mouse], mouse => [
+        (-mouse[0] * factor) / 50000 + x,
+        (mouse[1] * factor) / 50000 + y,
+        z
+      ])}
+      rotation={rotation}
+      castShadow
+    >
+      <coneGeometry
+        attach="geometry"
+        args={[
+          radius,
+          height,
+          radialSegments,
+          heightSegments,
+          openEnded,
+          thetaStart,
+          thetaLength
+        ]}
+      />
+      <meshStandardMaterial
+        opacity={1}
+        transparent
+        attach="material"
+        color="#ff562d"
+        roughness={0.73}
+        metalness={0.4}
+      />
     </a.mesh>
   );
 }
@@ -160,9 +244,48 @@ function Scene2({ mouse }) {
         penumbra={0.796}
         castShadow
       />
-      <Box mouse={mouse} x={0} y={-5.5} factor={40}/>
-      <Box mouse={mouse} x={0} y={5.5} factor={40}/>
-      <Plane position={[0, 0, -10]} />
+      <Torus mouse={mouse} x={30} y={0} factor={90} />
+      <Plane position={[0, 0, -10]} color={"#2c365b"} />
+    </>
+  );
+}
+
+function Scene3({ mouse }) {
+  return (
+    <>
+      <ambientLight intensity={0.6} />
+      <spotLight
+        intensity={1.65}
+        position={[-80, 60, 30]}
+        angle={1}
+        penumbra={1}
+        castShadow
+      />
+      <spotLight
+        intensity={2.65}
+        position={[80, 60, 20]}
+        color={"#4c3b5e"}
+        angle={1}
+        penumbra={0.2}
+        castShadow
+      />
+      <Pyramid2
+        mouse={mouse}
+        x={5}
+        y={0}
+        z={-2}
+        factor={150}
+        rotation={[4, 1, 6]}
+      />
+      <Pyramid2
+        mouse={mouse}
+        x={-6.5}
+        y={-4}
+        z={7}
+        factor={60}
+        rotation={[8, 8.6, 5.9]}
+      />
+      <Plane position={[0, 0, -10]} color={"#2c365b"} />
     </>
   );
 }
@@ -178,9 +301,11 @@ function App() {
     <FullPage onMouseMove={onMouseMove}>
       <GlobalStyle />
       <Text>
+        <Logo />
         <p>
-      we’re a creative studio who specializes on
-inspiring digital strategies and experiences</p>
+          we’re a creative studio who specializes on inspiring digital
+          strategies and experiences
+        </p>
       </Text>
       <ThreeFull>
         <Canvas
@@ -195,7 +320,7 @@ inspiring digital strategies and experiences</p>
       </ThreeFull>
       <Block1 />
       <ThreeBlock>
-      <Canvas
+        <Canvas
           camera={{ position: [0, 0, 15] }}
           onCreated={({ gl }) => (
             (gl.shadowMap.enabled = true),
@@ -205,9 +330,19 @@ inspiring digital strategies and experiences</p>
           <Scene2 mouse={mouse} />
         </Canvas>
       </ThreeBlock>
-      <Block2 />
+      <Block2>
+        <Canvas
+          camera={{ position: [0, 0, 12] }}
+          onCreated={({ gl }) => (
+            (gl.shadowMap.enabled = true),
+            (gl.shadowMap.type = THREE.PCFSoftShadowMap)
+          )}
+        >
+          <Scene3 mouse={mouse} />
+        </Canvas>
+      </Block2>
       <Block3 />
-    </FullPage >
+    </FullPage>
   );
 }
 
