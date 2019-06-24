@@ -1,20 +1,27 @@
 import * as THREE from "three";
-import React, { useCallback, set, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSpring, a, interpolate } from "react-spring/three";
 import { animated } from "react-spring";
 import { Canvas } from "react-three-fiber";
 import styled, { createGlobalStyle } from "styled-components/macro";
-import flat from 'lodash-es/flatten'
+import flat from "lodash-es/flatten";
 import { SVGLoader } from "./resources/SVGLoader";
 import LogoSVG from "./resources/logo.svg";
 
-console.log(SVGLoader)
-const deg = THREE.Math.degToRad
+const deg = THREE.Math.degToRad;
 const loaders = new Promise(res =>
   new SVGLoader().load(LogoSVG, shapes =>
-    res(flat(shapes.map((group, index) => group.toShapes(true).map(shape => ({ shape, color: group.color, index })))))
+    res(
+      flat(
+        shapes.map((group, index) =>
+          group
+            .toShapes(true)
+            .map(shape => ({ shape, color: group.color, index }))
+        )
+      )
+    )
   )
-)
+);
 
 const GlobalStyle = createGlobalStyle`
   canvas {
@@ -26,24 +33,28 @@ const GlobalStyle = createGlobalStyle`
     overflow: hidden;
   }
   body{
-    background-color: #f4f4f4;
+    background-color: black;
   }
+`;
+
+const AllPages = styled.div`
+  width: 100%;
+  height: 300vh;
 `;
 
 const FullPage = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: white;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
   position: relative;
   box-sizing: border-box;
   background-color: #f4f4f4;
-  cursor:none;
+  cursor: none;
   ::after {
     content: " ";
-    position: absolute;
+    position: fixed;
     margin: 24px;
     width: calc(100% - 48px);
     height: calc(100% - 48px);
@@ -56,7 +67,7 @@ const FullPage = styled.div`
 `;
 
 const Logo = styled.div`
-  position: absolute;
+  position: fixed;
   margin: 50px 70px;
   left: 0;
   top: 0;
@@ -93,7 +104,7 @@ const ThreeFull = styled.div`
   position: relative;
 `;
 
-function Graphic({ mouse, shapes }) {
+function Graphic({ mouse, shapes, top }) {
   const extrudeSettings = {
     steps: 10,
     depth: 700,
@@ -101,8 +112,8 @@ function Graphic({ mouse, shapes }) {
     bevelThickness: 0,
     bevelSize: 0,
     bevelOffset: 0,
-    bevelSegments: 1,
-  }
+    bevelSegments: 1
+  };
   const extrudeSettings2 = {
     steps: 1,
     depth: 15,
@@ -110,107 +121,142 @@ function Graphic({ mouse, shapes }) {
     bevelThickness: 20,
     bevelSize: 10,
     bevelOffset: 0,
-    bevelSegments: 1,
-  }
-  const factor = 1000
-  const x = -60
-  const y = 30
-  const z = 0
-  const scaleFactor = 0.05
-  console.log(mouse)
+    bevelSegments: 1
+  };
+  const factor = 1000;
+  const x = -60;
+  const y = 30;
+  const z = 0;
+  const scaleFactor = 0.04;
+  const reducer = 1;
+
   return (
     <a.group
-      scale={[scaleFactor, scaleFactor, scaleFactor]}
-      position={interpolate([mouse], mouse => [(-mouse[0] * factor) / 50000 + x, (mouse[1] * factor) / 50000 + y, z])}>
+      scale={interpolate([top], top => [
+        scaleFactor + (top / reducer),
+        scaleFactor + (top / reducer),
+        scaleFactor + (top / reducer)
+      ])}
+      position={interpolate([mouse], mouse => [
+        (-mouse[0] * factor) / 50000 + x,
+        (mouse[1] * factor) / 50000 + y,
+        z
+      ])}
+    >
       {shapes.map(({ shape }, key) => (
         <a.mesh key={key} rotation={[deg(0), deg(180), deg(180)]}>
           <meshStandardMaterial
             opacity={1}
             transparent
             attach="material"
-            color={key === 0 ? '#080b0c' : 'white'}
+            color={key === 0 ? "#080b0c" : "white"}
             roughness={0.73}
             side={THREE.DoubleSide}
             metalness={0.4}
           />
-          <extrudeBufferGeometry attach="geometry" args={[shape, key === 0 ? extrudeSettings : extrudeSettings2]} />
+          <extrudeBufferGeometry
+            attach="geometry"
+            args={[shape, key === 0 ? extrudeSettings : extrudeSettings2]}
+          />
         </a.mesh>
       ))}
     </a.group>
-  )
+  );
 }
 
 function Cursor({ mouse }) {
-  const pointLight2 = new THREE.PointLight()
+  const pointLight2 = new THREE.PointLight();
   return (
-    <a.group position={interpolate([mouse], mouse => [mouse[0] / 5, -mouse[1] / 5, 4])}>
-      <primitive object={pointLight2} color={'white'} intensity={5} sphereSize={1} position={[0, 0, 0]} />
+    <a.group
+      position={interpolate([mouse], mouse => [mouse[0] / 5, -mouse[1] / 5, 4])}
+    >
+      <primitive
+        object={pointLight2}
+        color={"white"}
+        intensity={5}
+        sphereSize={1}
+        position={[0, 0, 0]}
+      />
       <a.mesh position={[0, 0, 0]}>
         <sphereGeometry attach="geometry" args={[1, 20, 20]} />
-        <meshLambertMaterial attach="material" color="white" refractionRatio={0.95} />
+        <meshLambertMaterial
+          attach="material"
+          color="white"
+          refractionRatio={0.95}
+        />
       </a.mesh>
     </a.group>
-  )
+  );
 }
 
-function Scene({ mouse }) {
-  const [shapes, setShape] = useState([])
-  useEffect(() => void loaders.then(setTheShape), [])
+function Scene({ mouse, top }) {
+  const [shapes, setShape] = useState([]);
+  useEffect(() => void loaders.then(setTheShape), []);
 
   function setTheShape() {
-    void loaders.then(setShape)
-    console.log(shapes, loaders)
+    void loaders.then(setShape);
   }
-  const pointLight = new THREE.PointLight()
+  const pointLight = new THREE.PointLight();
 
   return (
     <>
       <ambientLight intensity={1} sphereSize={1} color="white" />
       <spotLight intensity={0} position={[300, 300, 4000]} />
-      <primitive object={pointLight} color={'#2f54b4'} intensity={25} position={[65, 2, 0]} sphereSize={1} />
+      <primitive
+        object={pointLight}
+        color={"#2f54b4"}
+        intensity={25}
+        position={[65, 2, 0]}
+        sphereSize={1}
+      />
       <Cursor mouse={mouse} />
-      <Graphic mouse={mouse} shapes={shapes} />
+      <Graphic mouse={mouse} shapes={shapes} top={top} />
     </>
-  )
+  );
 }
 
 function App() {
   const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] }));
+  const [{ top }, setTop] = useSpring(() => ({ top: 0 }));
+
   const onMouseMove = useCallback(
     ({ clientX: x, clientY: y }) =>
       set({ mouse: [x - window.innerWidth / 2, y - window.innerHeight / 2] }),
     []
   );
+  const onScroll = useCallback(
+    e => setTop({ top: e.target.scrollTop }),
+    []
+  );
   return (
-    <FullPage onMouseMove={onMouseMove}>
-      <GlobalStyle />
-      <Text>
-        <Logo />
-        <animated.p
-          style={{
-            transform: mouse.interpolate(
-              (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`
-            )
-          }}
-        >
-          we’re a creative studio who specializes on inspiring digital
-          strategies and experiences
-        </animated.p>
-      </Text>
-      <ThreeFull>
-      <Canvas
-        invalidateFrameloop
-        camera={{
-          fov: 90,
-          position: [0, 0, 100],
-          rotation: [0, deg(0), deg(0)],
-          near: 0.1,
-          far: 10000,
-        }}>
-          <Scene mouse={mouse} />
-        </Canvas>
-      </ThreeFull>
-    </FullPage>
+    <AllPages onScroll={onScroll}>
+      <FullPage onMouseMove={onMouseMove}>
+        <GlobalStyle />
+        <Text>
+          <Logo />
+          <animated.p
+            style={{
+              transform: mouse.interpolate(
+                (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`
+              )
+            }}
+          >
+            we’re a creative studio who specializes on inspiring digital
+            strategies and experiences
+          </animated.p>
+        </Text>
+        <ThreeFull>
+          <Canvas
+            invalidateFrameloop
+            camera={{
+              position: [0, 0, 100]
+            }}
+          >
+            <Scene mouse={mouse} top={top} />
+          </Canvas>
+        </ThreeFull>
+      </FullPage>
+    </AllPages>
   );
 }
 
