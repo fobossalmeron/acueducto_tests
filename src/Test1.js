@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import React, { useCallback, set } from "react";
 import { useSpring, a, interpolate } from "react-spring/three";
+import {animated} from "react-spring";
 import { Canvas } from "react-three-fiber";
 import styled, { createGlobalStyle } from "styled-components/macro";
-import { Triangle } from "three";
 
 const GlobalStyle = createGlobalStyle`
   canvas {
@@ -31,10 +31,11 @@ const FullPage = styled.div`
     margin: 24px;
     width: calc(100% - 48px);
     height: calc(100% - 48px);
-    border: 2px solid black;
+    border: 2px solid #fff;
     box-sizing: border-box;
     z-index: 5;
     pointer-events: none;
+    mix-blend-mode: difference;
   }
 `;
 
@@ -290,6 +291,8 @@ function Scene3({ mouse }) {
   );
 }
 
+const trans1 = (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`
+
 function App() {
   const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] }));
   const onMouseMove = useCallback(
@@ -302,10 +305,10 @@ function App() {
       <GlobalStyle />
       <Text>
         <Logo />
-        <p>
+        <animated.p style={{ transform: mouse.interpolate((x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`) }}>
           we’re a creative studio who specializes on inspiring digital
           strategies and experiences
-        </p>
+        </animated.p>
       </Text>
       <ThreeFull>
         <Canvas
