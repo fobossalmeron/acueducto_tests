@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/acueducto_tests/precache-manifest.a3d141f3394ce32f03c2bed96c0e40ff.js"
+  "/acueducto_tests/precache-manifest.7a600363f0f999662f57ad9e05cf14f2.js"
 );
 
 self.addEventListener('message', (event) => {
