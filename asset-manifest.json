@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/acueducto_tests/static/css/main.34de6062.chunk.css",
-    "main.js": "/acueducto_tests/static/js/main.73011ad0.chunk.js",
-    "main.js.map": "/acueducto_tests/static/js/main.73011ad0.chunk.js.map",
+    "main.js": "/acueducto_tests/static/js/main.17b30c81.chunk.js",
+    "main.js.map": "/acueducto_tests/static/js/main.17b30c81.chunk.js.map",
     "runtime~main.js": "/acueducto_tests/static/js/runtime~main.8d93dd2f.js",
     "runtime~main.js.map": "/acueducto_tests/static/js/runtime~main.8d93dd2f.js.map",
-    "static/js/2.fde0a4f4.chunk.js": "/acueducto_tests/static/js/2.fde0a4f4.chunk.js",
-    "static/js/2.fde0a4f4.chunk.js.map": "/acueducto_tests/static/js/2.fde0a4f4.chunk.js.map",
+    "static/js/2.7b5aaf6d.chunk.js": "/acueducto_tests/static/js/2.7b5aaf6d.chunk.js",
+    "static/js/2.7b5aaf6d.chunk.js.map": "/acueducto_tests/static/js/2.7b5aaf6d.chunk.js.map",
     "index.html": "/acueducto_tests/index.html",
-    "precache-manifest.7a600363f0f999662f57ad9e05cf14f2.js": "/acueducto_tests/precache-manifest.7a600363f0f999662f57ad9e05cf14f2.js",
+    "precache-manifest.b6054eaf4bde1e7185d123ad6c04cec0.js": "/acueducto_tests/precache-manifest.b6054eaf4bde1e7185d123ad6c04cec0.js",
     "service-worker.js": "/acueducto_tests/service-worker.js",
     "static/css/main.34de6062.chunk.css.map": "/acueducto_tests/static/css/main.34de6062.chunk.css.map",
-    "static/media/logo.svg": "/acueducto_tests/static/media/logo.23d40bdd.svg"
+    "static/media/logo.595973c5.svg": "/acueducto_tests/static/media/logo.595973c5.svg"
   }
 }
