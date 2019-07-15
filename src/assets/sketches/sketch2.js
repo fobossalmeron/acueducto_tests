@@ -4,6 +4,7 @@ import p5 from "p5";
 export default function sketch(p) {
   let shad, graph;
   const colors = ["#cc2e44", "#2f54b4", "#080b0c","#080b0c","#080b0c", "#080b0c"];
+  //#cc es rojo #2f es azul
   const grid = 40;
 
   var vert=`

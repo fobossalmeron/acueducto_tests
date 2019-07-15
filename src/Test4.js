@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { useSpring, animated } from "react-spring";
-import styled, { createGlobalStyle, keyframes } from "styled-components/macro";
+//import { useSpring, animated } from "react-spring";
+import styled, { createGlobalStyle } from "styled-components/macro";
 import { ReactComponent as logo } from "./assets/img/logo.svg";
 import P5Wrapper from "react-p5-wrapper";
-import sketch0 from "./assets/sketches/sketch2";
 import sketch1 from "./assets/sketches/sketch1";
-import sketch2 from "./assets/sketches/sketch3";
+import sketch2 from "./assets/sketches/sketch2";
 
 const GlobalStyle = createGlobalStyle`
 body{
   overflow-x:hidden;
   width:100%;
+  @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
+  font-family: 'Raleway', sans-serif;
 }
   canvas {
     width: 100%;
@@ -75,61 +76,68 @@ const Logo = styled(logo)`
   left: 0;
   top: 0;
   max-width: 160px;
+  pointer-events: auto;
+  cursor: pointer;
 `;
 
 const Text = styled.div`
-  padding: 70px;
+  padding: 70px 12%;
   z-index: 10;
   color: #f4f4f4;
   grid-column: 1 / span 3;
   grid-row: 1 / span 2;
-  font-size: 3.1rem;
-  font-weight: normal;
   align-self: flex-end;
-  p {
-    max-width: 800px;
+  h2 {
+    max-width: 760px;
+    font-weight: 700;
     display: flex;
     justify-self: center;
+    font-size: 3.7rem;
+    font-weight: normal;
+    margin:0;
+  }
+  p{
+    font-size: 1.7rem;
+    max-width: 530px;
+    margin: 15px 0 0 0;
   }
 `;
 
-const Container = styled(animated.div)`
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-  z-index: 0;
-`;
-
-const calc = (x, y) => [x - window.innerWidth / 2, y - window.innerHeight / 2];
-const trans1 = (x, y) => `translate3d(${x / 6}px,${y / 6}px,0)`;
-const trans2 = (x, y) => `translateX(${x / 10}px) rotate(${(y + x) / 30}deg)`;
+// const calc = (x, y) => [x - window.innerWidth / 2, y - window.innerHeight / 2];
+// const trans1 = (x, y) => `translate3d(${x / 6}px,${y / 6}px,0)`;
+// const trans2 = (x, y) => `translateX(${x / 10}px) rotate(${(y + x) / 30}deg)`;
 
 function App() {
-  const [props, set] = useSpring(() => ({
-    xy: [0, 0],
-    config: { mass: 2, tension: 200, friction: 50 }
-  }));
-  const [loadedSketch, setSketch] = useState(1);
+  // const [props, set] = useSpring(() => ({
+  //   xy: [0, 0],
+  //   config: { mass: 2, tension: 200, friction: 50 }
+  // }));
+  const [loadedSketch, setSketch] = useState(0);
 
-  const sketches = [sketch0, sketch1, sketch2];
+  const sketches = [sketch1, sketch2];
 
+  const nextSketch = () => {
+    console.log("next sketch")
+    var _i = loadedSketch;
+    _i++;
+    if(_i>= sketches.length){
+      _i = 0;
+    }
+    setSketch(_i)
+  }
   return (
     <FullPage
-      onMouseMove={({ clientX: x, clientY: y }) => set({ xy: calc(x, y) })}
     >
       <FixedHeader>
-        <Logo />
+        <Logo onClick={() => nextSketch()}/>
       </FixedHeader>
       <GlobalStyle />
       <SketchContainer>
         <P5Wrapper sketch={sketches[loadedSketch]} id="Frame" />
       </SketchContainer>
       <Text>
-        <p>we are a strategic desgin & creative digital studio</p>
-        <button onClick={() => setSketch(1)}>Sketch1</button>
-        <button onClick={() => setSketch(0)}>Sketch2</button>
-        <button onClick={() => setSketch(2)}>Sketch3</button>
-
+        <h2>we are a strategic desgin & creative digital studio</h2>
+        <p>We partner with innovators of the globe to develop projects that <b>inspire, tell stories</b> and <b>build meaningful bonds</b></p>
       </Text>
     </FullPage>
   );
