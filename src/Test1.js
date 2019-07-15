@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import React, { useCallback, set } from "react";
+import React, { useCallback, set, useEffect } from "react";
 import { useSpring, a, interpolate } from "react-spring/three";
-import {animated} from "react-spring";
+import { animated } from "react-spring";
 import { Canvas } from "react-three-fiber";
 import styled, { createGlobalStyle } from "styled-components/macro";
 
@@ -26,6 +26,7 @@ const FullPage = styled.div`
   position: relative;
   box-sizing: border-box;
   ::after {
+    display:none;
     content: " ";
     position: absolute;
     margin: 24px;
@@ -36,7 +37,28 @@ const FullPage = styled.div`
     z-index: 5;
     pointer-events: none;
     mix-blend-mode: difference;
+    /*filter: grayscale(1) contrast(10) invert(1);*/
   }
+`;
+
+const Frame = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+  &:before{
+    content: ' ';
+    border: 2px solid #fff;
+    mix-blend-mode: difference;
+
+  }
+    margin: 24px;
+    width: calc(100% - 48px); 
+    height: calc(100% - 48px);
+    box-sizing: border-box;
+    z-index: 5;
+    pointer-events: none;
+    /*filter: grayscale(1) contrast(10) invert(1);*/
 `;
 
 const Logo = styled.div`
@@ -87,11 +109,13 @@ const Block1 = styled.div`
   grid-row: 3 / span 1;
   background-color: #cc2e44;
 `;
+
 const Block2 = styled.div`
   grid-column: 3 / span 1;
   grid-row: 3 / span 1;
   background-color: #080b0c;
 `;
+
 const Block3 = styled.div`
   padding: 80px;
   grid-column: 4 / span 1;
@@ -132,16 +156,16 @@ function Box({ mouse, x, y, factor }) {
 function Scene({ mouse }) {
   return (
     <>
-      <ambientLight intensity={0.1} />
+      <ambientLight intensity={0.15} />
       <spotLight
-        intensity={0.65}
+        intensity={0.75}
         position={[-80, 60, 30]}
         angle={0.6}
         penumbra={0.796}
         castShadow
       />
-      <Box mouse={mouse} x={0} y={-5.5} factor={40} />
-      <Box mouse={mouse} x={0} y={0} factor={40} />
+      <Box mouse={mouse} x={0} y={-5.5} factor={70} />
+      <Box mouse={mouse} x={0} y={0} factor={55} />
       <Box mouse={mouse} x={0} y={5.5} factor={40} />
       <Plane position={[0, 0, -10]} color={"#222429"} />
     </>
@@ -291,7 +315,7 @@ function Scene3({ mouse }) {
   );
 }
 
-const trans1 = (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`
+const trans1 = (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`;
 
 function App() {
   const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] }));
@@ -300,12 +324,24 @@ function App() {
       set({ mouse: [x - window.innerWidth / 2, y - window.innerHeight / 2] }),
     []
   );
+  useEffect(() => {
+    document.getElementById("Frame").style.filter = "grayscale(1)";
+    console.log("pasó el efecto");
+  });
+
   return (
     <FullPage onMouseMove={onMouseMove}>
       <GlobalStyle />
+      <Frame id="Frame"/>
       <Text>
         <Logo />
-        <animated.p style={{ transform: mouse.interpolate((x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`) }}>
+        <animated.p
+          style={{
+            transform: mouse.interpolate(
+              (x, y) => `translate3d(${x / 10}px,${y / 10}px,0)`
+            )
+          }}
+        >
           we’re a creative studio who specializes on inspiring digital
           strategies and experiences
         </animated.p>
@@ -333,17 +369,7 @@ function App() {
           <Scene2 mouse={mouse} />
         </Canvas>
       </ThreeBlock>
-      <Block2>
-        <Canvas
-          camera={{ position: [0, 0, 12] }}
-          onCreated={({ gl }) => (
-            (gl.shadowMap.enabled = true),
-            (gl.shadowMap.type = THREE.PCFSoftShadowMap)
-          )}
-        >
-          <Scene3 mouse={mouse} />
-        </Canvas>
-      </Block2>
+      <Block2 />
       <Block3 />
     </FullPage>
   );

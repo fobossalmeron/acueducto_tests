@@ -5,8 +5,10 @@
   "homepage": "http://fobossalmeron.github.io/acueducto_tests",
   "dependencies": {
     "lodash-es": "^4.17.11",
+    "p5": "^0.9.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-p5-wrapper": "^2.0.0",
     "react-scripts": "3.0.1",
     "react-spring": "^8.0.25",
     "react-three-fiber": "^2.2.7",

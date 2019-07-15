@@ -34,12 +34,14 @@ const GlobalStyle = createGlobalStyle`
   }
   body{
     background-color: black;
+    overflow: hidden;
   }
 `;
 
 const AllPages = styled.div`
   width: 100%;
   height: 300vh;
+  overflow: scroll;
 `;
 
 const FullPage = styled.div`
@@ -133,14 +135,14 @@ function Graphic({ mouse, shapes, top }) {
   return (
     <a.group
       scale={interpolate([top], top => [
-        scaleFactor + (top / reducer),
-        scaleFactor + (top / reducer),
-        scaleFactor + (top / reducer)
+        scaleFactor + top / reducer,
+        scaleFactor + top / reducer,
+        scaleFactor + top / reducer
       ])}
-      position={interpolate([mouse], mouse => [
+      position={interpolate([top, mouse], (top, mouse) => [
         (-mouse[0] * factor) / 50000 + x,
         (mouse[1] * factor) / 50000 + y,
-        z
+        z + top
       ])}
     >
       {shapes.map(({ shape }, key) => (
@@ -216,20 +218,17 @@ function Scene({ mouse, top }) {
 }
 
 function App() {
-  const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] }));
-  const [{ top }, setTop] = useSpring(() => ({ top: 0 }));
-
+  const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }));
   const onMouseMove = useCallback(
     ({ clientX: x, clientY: y }) =>
       set({ mouse: [x - window.innerWidth / 2, y - window.innerHeight / 2] }),
     []
   );
-  const onScroll = useCallback(
-    e => setTop({ top: e.target.scrollTop }),
-    []
-  );
+  // const onScroll = useCallback(e => set({ top: e.target.scrollTop }), [])
+  const onScroll = useCallback(e => console.log("entre"), []);
+
   return (
-    <AllPages onScroll={onScroll}>
+    <>
       <FullPage onMouseMove={onMouseMove}>
         <GlobalStyle />
         <Text>
@@ -248,6 +247,11 @@ function App() {
         <ThreeFull>
           <Canvas
             invalidateFrameloop
+            onCreated={({ gl }) => (gl.autoClear = false)}
+            gl={{
+              clearBeforeRender: false,
+              preserveDrawingBuffer: true
+            }}
             camera={{
               position: [0, 0, 100]
             }}
@@ -256,7 +260,8 @@ function App() {
           </Canvas>
         </ThreeFull>
       </FullPage>
-    </AllPages>
+      <AllPages onScroll={onScroll} />
+    </>
   );
 }
 
