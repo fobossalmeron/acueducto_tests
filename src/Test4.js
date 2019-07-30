@@ -3,15 +3,20 @@ import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components/macro";
 import { ReactComponent as logo } from "./assets/img/logo.svg";
 import P5Wrapper from "react-p5-wrapper";
-import sketch1 from "./assets/sketches/sketch1";
-import sketch2 from "./assets/sketches/sketch2";
+import original from "./assets/sketches/original";
+import pixels from "./assets/sketches/pixels";
+import ajustemovimiento from "./assets/sketches/ajustemovimiento";
+import sinpatron from "./assets/sketches/sinpatron";
+import combinacion from "./assets/sketches/combinacion";
+import sketch5 from "./assets/sketches/sketch5";
+
 
 const GlobalStyle = createGlobalStyle`
 body{
   overflow-x:hidden;
   width:100%;
   @import url('https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap');
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Acumin Pro Wide', sans-serif;
 }
   canvas {
     width: 100%;
@@ -80,6 +85,14 @@ const Logo = styled(logo)`
   cursor: pointer;
 `;
 
+const Info = styled.p`
+position:absolute;
+bottom:0;
+right:20px;
+z-index:12;
+color:white;
+`;
+
 const Text = styled.div`
   padding: 70px 12%;
   z-index: 10;
@@ -89,11 +102,10 @@ const Text = styled.div`
   align-self: flex-end;
   h2 {
     max-width: 760px;
-    font-weight: 700;
+    font-weight: 100;
     display: flex;
     justify-self: center;
     font-size: 3.7rem;
-    font-weight: normal;
     margin:0;
   }
   p{
@@ -112,9 +124,12 @@ function App() {
   //   xy: [0, 0],
   //   config: { mass: 2, tension: 200, friction: 50 }
   // }));
-  const [loadedSketch, setSketch] = useState(0);
+  const [loadedSketch, setSketch] = useState(2);
+  const [sketchIndex, setSketchIndex] = useState(2);
 
-  const sketches = [sketch1, sketch2];
+
+  const sketches = [ sinpatron, ajustemovimiento, combinacion, sketch5];
+  const sketchesNames = [ "Sin Patron", "Ajuste Movimiento", "Combinacion", "Sin Textura Randomizado"];
 
   const nextSketch = () => {
     console.log("next sketch")
@@ -124,20 +139,22 @@ function App() {
       _i = 0;
     }
     setSketch(_i)
+    setSketchIndex(_i)
   }
   return (
     <FullPage
     >
       <FixedHeader>
         <Logo onClick={() => nextSketch()}/>
+        <Info>{sketchesNames[sketchIndex]}</Info>
       </FixedHeader>
       <GlobalStyle />
       <SketchContainer>
         <P5Wrapper sketch={sketches[loadedSketch]} id="Frame" />
       </SketchContainer>
       <Text>
-        <h2>we are a strategic desgin & creative digital studio</h2>
-        <p>We partner with innovators of the globe to develop projects that <b>inspire, tell stories</b> and <b>build meaningful bonds</b></p>
+        <h2>we are a strategic desgin & development studio</h2>
+        <p>We partner with innovators around the globe to develop experiences that tell stories, inspire communities and build meaningful bonds</p>
       </Text>
     </FullPage>
   );
