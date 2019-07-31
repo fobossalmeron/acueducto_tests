@@ -124,12 +124,12 @@ function App() {
   //   xy: [0, 0],
   //   config: { mass: 2, tension: 200, friction: 50 }
   // }));
-  const [loadedSketch, setSketch] = useState(2);
-  const [sketchIndex, setSketchIndex] = useState(2);
+  const [loadedSketch, setSketch] = useState(0);
+  const [sketchIndex, setSketchIndex] = useState(0);
 
 
-  const sketches = [ sinpatron, ajustemovimiento, combinacion, sketch5];
-  const sketchesNames = [ "Sin Patron", "Ajuste Movimiento", "Combinacion", "Sin Textura Randomizado"];
+  const sketches = [ sinpatron, original, ajustemovimiento, combinacion, sketch5];
+  const sketchesNames = [ "Sin Patron", "Original", "Ajuste Movimiento", "Combinacion", "Sin Textura Randomizado"];
 
   const nextSketch = () => {
     console.log("next sketch")

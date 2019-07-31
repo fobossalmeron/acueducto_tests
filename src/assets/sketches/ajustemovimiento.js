@@ -84,7 +84,7 @@ color*=(1.5*f*f*f+1.2*f*f+2.3*f);
     uniform mat3 uNormalMatrix;
 
     void main() {
-      gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.0);
+      gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.001);
 
       // just passing things through
       var_vertPos      = aPosition;
