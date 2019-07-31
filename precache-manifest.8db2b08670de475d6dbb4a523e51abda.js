@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "806cb21d0867e82a09f0fd7c05ae299f",
+    "revision": "856deb370c1483ed3a72aec248e81998",
     "url": "/acueducto_tests/index.html"
   },
   {
-    "revision": "82e88e7ba014ee849e26",
+    "revision": "4ac0587e1fbdb8197489",
     "url": "/acueducto_tests/static/css/main.34de6062.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/acueducto_tests/static/js/2.2314a3f3.chunk.js"
   },
   {
-    "revision": "82e88e7ba014ee849e26",
-    "url": "/acueducto_tests/static/js/main.168817cb.chunk.js"
+    "revision": "4ac0587e1fbdb8197489",
+    "url": "/acueducto_tests/static/js/main.4b936242.chunk.js"
   },
   {
     "revision": "9f9bb41fb14649dbac9e",
